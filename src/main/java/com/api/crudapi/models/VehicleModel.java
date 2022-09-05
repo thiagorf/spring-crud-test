@@ -29,6 +29,11 @@ public class VehicleModel implements Serializable{
 	@JoinColumn(name = "parkingSpot_id")
 	private ParkingSpotModel parkingSpot;
 
+	
+	public UUID getId() {
+		return id;
+	}
+	
 	public String getBrand() {
 		return brand;
 	}
