@@ -45,16 +45,43 @@ public class ParkingSpotService {
 		return parkingSpotRepository.save(parkingSpotModel);
 	}
 
-	public ResponseEntity<Page<ParkingSpotModel>> findAll(Pageable pageable) {
+	public ResponseEntity<Page<ParkingSpotModel>> findAllParkingSpots(Pageable pageable) {
 		return ResponseEntity.ok().body(parkingSpotRepository.findAll(pageable));
 	}
 	
-	public Optional<ParkingSpotModel> findById(UUID id) {
-		return parkingSpotRepository.findById(id);
+	public ResponseEntity<ParkingSpotModel> findOneParkingSpot(UUID id) {
+		Optional<ParkingSpotModel> parkingSpot = parkingSpotRepository.findById(id);
+		
+		if(!parkingSpot.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		return ResponseEntity.ok().body(parkingSpot.get());
 	}
 	
 	@Transactional
-	public void delete(ParkingSpotModel parkingSpot) {
-		parkingSpotRepository.delete(parkingSpot);
+	public ResponseEntity<ParkingSpotModel> deleteParkingSpot(UUID id) {
+		Optional<ParkingSpotModel> parkingSpot = parkingSpotRepository.findById(id);
+		
+		if(!parkingSpot.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		return ResponseEntity.noContent().build();
 	}
+	
+	public ResponseEntity<ParkingSpotModel> updateParkingSpot(UUID id, ParkingSpotDto parkingSpotDto) {
+		Optional<ParkingSpotModel> parkingSpot = parkingSpotRepository.findById(id);
+		
+		if(!parkingSpot.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		var parkingSpotModel = new ParkingSpotModel();
+		BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);
+		parkingSpotModel.setId(parkingSpot.get().getId());
+		
+		return ResponseEntity.ok().body(parkingSpotRepository.save(parkingSpotModel));
+	}
+	
 }

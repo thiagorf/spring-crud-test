@@ -46,44 +46,23 @@ public class ParkingSpotController {
 	
 	@GetMapping
 	public ResponseEntity<Page<ParkingSpotModel>> getAllParkingSpots(@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
-		return this.parkingSpotService.findAll(pageable);	
+		return this.parkingSpotService.findAllParkingSpots(pageable);	
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Object> getOneParkingSpot(@PathVariable(value = "id") UUID id) {
-		Optional<ParkingSpotModel> parkingSpotModelOptional = parkingSpotService.findById(id);
-		
-		if(!parkingSpotModelOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found!");
-		}
-		
-		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotModelOptional.get());
+	public ResponseEntity<ParkingSpotModel> getOneParkingSpot(@PathVariable(value = "id") UUID id) {
+		return this.parkingSpotService.findOneParkingSpot(id);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deleteParkingSpot(@PathVariable(value = "id") UUID id) {
-		Optional<ParkingSpotModel> parkingSpotModel = parkingSpotService.findById(id);
-		
-		if(!parkingSpotModel.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found!");
-		}
-		parkingSpotService.delete(parkingSpotModel.get());
-		
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Parking Spot has been deleted!");
+	public ResponseEntity<ParkingSpotModel> deleteParkingSpot(@PathVariable(value = "id") UUID id) {
+		return this.parkingSpotService.deleteParkingSpot(id);
 		
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Object> updateParkingSpot(@PathVariable(value = "id") UUID id, @RequestBody @Valid ParkingSpotDto parkingSpotDto) {
-		Optional<ParkingSpotModel> parkingSpotModelOptional = parkingSpotService.findById(id);
-		if(!parkingSpotModelOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found!");
-		}
-		
-		ParkingSpotModel parkingSpotModel = new ParkingSpotModel();
-		BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);
-		parkingSpotModel.setId(parkingSpotModelOptional.get().getId());
-		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.save(parkingSpotModel));
+	public ResponseEntity<ParkingSpotModel> updateParkingSpot(@PathVariable(value = "id") UUID id, @RequestBody @Valid ParkingSpotDto parkingSpotDto) {
+		return this.parkingSpotService.updateParkingSpot(id, parkingSpotDto);
 	}
 	
 	
