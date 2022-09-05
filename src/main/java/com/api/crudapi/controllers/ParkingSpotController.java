@@ -1,7 +1,6 @@
 package com.api.crudapi.controllers;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,28 +41,12 @@ public class ParkingSpotController {
 	
 	@PostMapping
 	public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
-		if(parkingSpotService.existsByLicensePlateCar(parkingSpotDto.getLicensePlate())) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conclict: License Plate Car is already in use!");
-		}
-		
-		if(parkingSpotService.existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber())) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conclict: Parking Spot is already in use!");
-		}
-		
-		if(parkingSpotService.existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock())) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conclict: Parking Spot already registered for this apartment/block!");
-		}
-		
-		
-		var parkingSpotModel = new ParkingSpotModel();
-		BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);
-		parkingSpotModel.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
-		return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.save(parkingSpotModel));
+		return this.parkingSpotService.addParkingSpot(parkingSpotDto);
 	}
 	
 	@GetMapping
 	public ResponseEntity<Page<ParkingSpotModel>> getAllParkingSpots(@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
-		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAll(pageable));	
+		return this.parkingSpotService.findAll(pageable);	
 	}
 	
 	@GetMapping("/{id}")
@@ -100,7 +83,6 @@ public class ParkingSpotController {
 		ParkingSpotModel parkingSpotModel = new ParkingSpotModel();
 		BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);
 		parkingSpotModel.setId(parkingSpotModelOptional.get().getId());
-		parkingSpotModel.setRegistrationDate(parkingSpotModelOptional.get().getRegistrationDate());
 		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.save(parkingSpotModel));
 	}
 	

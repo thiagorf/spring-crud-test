@@ -1,7 +1,6 @@
 package com.api.crudapi.models;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,25 +27,7 @@ public class ParkingSpotModel  implements Serializable{
 	private int spotsQuantity = 10;
 	
 	@Column(nullable = false, unique = true, length = 10)
-	private String parkinkSpotNumber;
-	
-	@Column(nullable = false, unique = true, length = 7)
-	private String licensePlateCar;
-	
-	@Column(nullable = false, length = 70)
-	private String brandCar;
-	
-	@Column(nullable = false, length = 70)
-	private String modelCar;
-	
-	@Column(nullable = false, length = 70)
-	private String colorCar;
-	
-	@Column(nullable = false)
-	private LocalDateTime registrationDate;
-	
-	@Column(nullable = false, length = 130)
-	private String responsibleName;
+	private String parkingSpotNumber;
 	
 	@Column(nullable = false , length = 30)
 	private String apartment;
@@ -62,60 +43,12 @@ public class ParkingSpotModel  implements Serializable{
 		this.id = id;
 	}
 
-	public String getParkinkSpotNumber() {
-		return parkinkSpotNumber;
+	public String getParkingSpotNumber() {
+		return parkingSpotNumber;
 	}
 
-	public void setParkinkSpotNumber(String parkinkSpotNumber) {
-		this.parkinkSpotNumber = parkinkSpotNumber;
-	}
-
-	public String getLicensePlateCar() {
-		return licensePlateCar;
-	}
-
-	public void setLicensePlateCar(String licensePlateCar) {
-		this.licensePlateCar = licensePlateCar;
-	}
-
-	public String getBrandCar() {
-		return brandCar;
-	}
-
-	public void setBrandCar(String brandCar) {
-		this.brandCar = brandCar;
-	}
-
-	public String getModelCar() {
-		return modelCar;
-	}
-
-	public void setModelCar(String modelCar) {
-		this.modelCar = modelCar;
-	}
-
-	public String getColorCar() {
-		return colorCar;
-	}
-
-	public void setColorCar(String colorCar) {
-		this.colorCar = colorCar;
-	}
-
-	public LocalDateTime getRegistrationDate() {
-		return registrationDate;
-	}
-
-	public void setRegistrationDate(LocalDateTime registrationDate) {
-		this.registrationDate = registrationDate;
-	}
-
-	public String getResponsibleName() {
-		return responsibleName;
-	}
-
-	public void setResponsibleName(String responsibleName) {
-		this.responsibleName = responsibleName;
+	public void setParkingSpotNumber(String parkingSpotNumber) {
+		this.parkingSpotNumber = parkingSpotNumber;
 	}
 
 	public String getApartment() {
