@@ -1,7 +1,8 @@
 package com.api.crudapi.models;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name = "TB_PARKING_SPOT")
@@ -22,8 +24,8 @@ public class ParkingSpotModel  implements Serializable{
 	private UUID id;
 	
 	@OneToMany(mappedBy = "parkingSpot")
-	private List<VehicleModel> vehicles;
-	
+	private Set<VehicleModel> vehicles = new HashSet<>();
+
 	private int spotsQuantity = 10;
 	
 	@Column(nullable = false, unique = true, length = 10)
@@ -75,5 +77,14 @@ public class ParkingSpotModel  implements Serializable{
 		this.spotsQuantity = spotsQuantity;
 	}
 	
+	public Set<VehicleModel> getVehicles() {
+		return vehicles;
+	}
+	
+	
+	public void setVehicles(VehicleModel vehicle) {
+		this.vehicles.add(vehicle);
+		vehicle.setParkingSpot(this);
+	}
 	
 }

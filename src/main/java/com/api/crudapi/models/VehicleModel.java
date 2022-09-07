@@ -26,12 +26,16 @@ public class VehicleModel implements Serializable{
 	private String brand;
 	
 	@ManyToOne
-	@JoinColumn(name = "parkingSpot_id")
+	@JoinColumn(name = "parkingSpot_id", referencedColumnName = "id")
 	private ParkingSpotModel parkingSpot;
 
 	
 	public UUID getId() {
 		return id;
+	}
+	
+	public void setId(UUID id) {
+		this.id = id;
 	}
 	
 	public String getBrand() {
@@ -42,5 +46,12 @@ public class VehicleModel implements Serializable{
 		this.brand = brand;
 	}
 	
+	public ParkingSpotModel getParkingSpot() {
+		return parkingSpot;
+	}
+	
+	public void setParkingSpot(ParkingSpotModel parkingSpot) {
+		this.parkingSpot = parkingSpot;
+	}
 	
 }

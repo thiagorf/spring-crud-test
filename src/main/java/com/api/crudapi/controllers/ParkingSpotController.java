@@ -1,17 +1,14 @@
 package com.api.crudapi.controllers;
 
 
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -63,6 +60,13 @@ public class ParkingSpotController {
 	@PutMapping("/{id}")
 	public ResponseEntity<ParkingSpotModel> updateParkingSpot(@PathVariable(value = "id") UUID id, @RequestBody @Valid ParkingSpotDto parkingSpotDto) {
 		return this.parkingSpotService.updateParkingSpot(id, parkingSpotDto);
+	}
+	
+	// attach parkingspot id to vehicle and show the relantionship created?
+	@PutMapping("/{parkingSpot_id}/vehicles/{vehicle_id}")
+	public ResponseEntity<ParkingSpotModel> parkVehicle(@PathVariable("parkingSpot_id") UUID parkingSpotId, @PathVariable("vehicle_id") UUID vehicleId) {
+		
+		return parkingSpotService.parkVehicle(parkingSpotId, vehicleId);
 	}
 	
 	

@@ -2,12 +2,14 @@ package com.api.crudapi.services;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.api.crudapi.dtos.VehicleDto;
@@ -28,7 +30,7 @@ public class VehicleService {
 		var vehicleModel = new VehicleModel();
 		
 		BeanUtils.copyProperties(vehicleDto, vehicleModel);
-		this.vehicleRepository.save(vehicleModel);
+		vehicleRepository.saveAndFlush(vehicleModel);
 		
 		URI location = ServletUriComponentsBuilder
 				.fromCurrentRequest()
@@ -41,9 +43,47 @@ public class VehicleService {
 	}
 	
 	public ResponseEntity<List<VehicleModel>>  getAllVehicles() {
-		var vehicles = this.vehicleRepository.findAll();
+		var vehicles = vehicleRepository.findAll();
 		
 		return ResponseEntity.ok().body(vehicles);
+	}
+	
+	public ResponseEntity<VehicleModel> getOneVehicle(UUID id) {
+		Optional<VehicleModel> vehicleModel = vehicleRepository.findById(id);
+		
+		if(!vehicleModel.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		return ResponseEntity.ok().body(vehicleModel.get());
+	}
+	
+	public ResponseEntity<VehicleModel> updateVehicle(UUID id, VehicleDto vehicleDto) {
+		Optional<VehicleModel> vehicle = vehicleRepository.findById(id);
+		
+		if(!vehicle.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		var vehicleModel= new VehicleModel();
+		BeanUtils.copyProperties(vehicleDto, vehicleModel);
+		vehicleModel.setId(vehicle.get().getId());
+		
+		return ResponseEntity.ok().body(vehicleRepository.save(vehicleModel));
+		
+	}
+	
+	@Transactional
+	public ResponseEntity<VehicleModel> deleteVehicle(UUID id) {
+		Optional<VehicleModel> vehicleModel = vehicleRepository.findById(id);
+		
+		if(!vehicleModel.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		vehicleRepository.delete(vehicleModel.get());
+		
+		return ResponseEntity.noContent().build();
 	}
 	
 }
