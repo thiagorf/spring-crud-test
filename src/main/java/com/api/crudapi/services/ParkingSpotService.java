@@ -19,6 +19,7 @@ import com.api.crudapi.models.ParkingSpotModel;
 import com.api.crudapi.models.VehicleModel;
 import com.api.crudapi.repositories.ParkingSpotRepository;
 import com.api.crudapi.repositories.VehicleRepository;
+import com.api.crudapi.responses.ParkingSpotCarsResponse;
 
 @Service
 public class ParkingSpotService {
@@ -53,14 +54,17 @@ public class ParkingSpotService {
 		return ResponseEntity.ok().body(parkingSpotRepository.findAll(pageable));
 	}
 	
-	public ResponseEntity<ParkingSpotModel> findOneParkingSpot(UUID id) {
+	public ResponseEntity<ParkingSpotCarsResponse> findOneParkingSpot(UUID id) {
 		Optional<ParkingSpotModel> parkingSpot = parkingSpotRepository.findById(id);
 		
 		if(!parkingSpot.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
+		var parkingSpotCars = new ParkingSpotCarsResponse();
+		BeanUtils.copyProperties(parkingSpot, parkingSpotCars);
+		parkingSpotCars.setVehicles(parkingSpot.get().getVehicles());
 		
-		return ResponseEntity.ok().body(parkingSpot.get());
+		return ResponseEntity.ok().body(parkingSpotCars);
 	}
 	
 	@Transactional
@@ -110,4 +114,29 @@ public class ParkingSpotService {
 		
 	}
 	
+	public ResponseEntity<Object> leaveParkingSpot(UUID parkingSpotId, UUID vehicleId ) {
+		Optional<ParkingSpotModel> parkingSpot = parkingSpotRepository.findById(parkingSpotId);
+		
+		if(!parkingSpot.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		Optional<VehicleModel> vehicle = vehicleRepository.findById(vehicleId);
+		
+		if(!vehicle.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		var vehicleModel = vehicle.get();
+		var parkingSpotModel = parkingSpot.get();
+		
+		if(!parkingSpotModel.getVehicles().contains(vehicleModel)) {
+			return ResponseEntity.badRequest().body("Invalid or iniexisting vehicle!");
+		}
+		
+		parkingSpotModel.removeVehicles(vehicleModel);
+		parkingSpotRepository.save(parkingSpotModel);
+		
+		return ResponseEntity.ok().body(parkingSpotModel);
+	}
 }

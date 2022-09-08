@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
+
 @Entity
 @Table(name = "TB_PARKING_SPOT")
 public class ParkingSpotModel  implements Serializable{
@@ -26,7 +27,7 @@ public class ParkingSpotModel  implements Serializable{
 	private UUID id;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "parkingSpot")
+	@OneToMany(mappedBy = "parkingSpot" )
 	private Set<VehicleModel> vehicles = new HashSet<>();
 
 	private int spotsQuantity = 10;
@@ -84,10 +85,14 @@ public class ParkingSpotModel  implements Serializable{
 		return vehicles;
 	}
 	
-	
 	public void setVehicles(VehicleModel vehicle) {
 		this.vehicles.add(vehicle);
 		vehicle.setParkingSpot(this);
+	}
+	
+	public void removeVehicles(VehicleModel vehicle) {
+		vehicles.remove(vehicle);
+		vehicle.setParkingSpot(null);
 	}
 	
 }

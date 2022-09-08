@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.crudapi.dtos.ParkingSpotDto;
 import com.api.crudapi.models.ParkingSpotModel;
+import com.api.crudapi.responses.ParkingSpotCarsResponse;
 import com.api.crudapi.services.ParkingSpotService;
 
 
@@ -47,14 +48,13 @@ public class ParkingSpotController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ParkingSpotModel> getOneParkingSpot(@PathVariable(value = "id") UUID id) {
+	public ResponseEntity<ParkingSpotCarsResponse> getOneParkingSpot(@PathVariable(value = "id") UUID id) {
 		return this.parkingSpotService.findOneParkingSpot(id);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ParkingSpotModel> deleteParkingSpot(@PathVariable(value = "id") UUID id) {
 		return this.parkingSpotService.deleteParkingSpot(id);
-		
 	}
 	
 	@PutMapping("/{id}")
@@ -69,5 +69,9 @@ public class ParkingSpotController {
 		return parkingSpotService.parkVehicle(parkingSpotId, vehicleId);
 	}
 	
+	@PutMapping("/{parkingSpot_id}/vehicles/{vehicle_id}/leave")
+	public ResponseEntity<Object> leaveParkingSpot(@PathVariable("parkingSpot_id") UUID parkingSpotId, @PathVariable("vehicle_id") UUID vehicleId) {
+		return parkingSpotService.leaveParkingSpot(parkingSpotId, vehicleId);
+	}
 	
 }
