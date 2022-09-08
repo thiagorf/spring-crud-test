@@ -102,11 +102,9 @@ public class ParkingSpotService {
 			return ResponseEntity.notFound().build();
 		}
 		
-		var vehicleModel = new VehicleModel();
-		BeanUtils.copyProperties(vehicle, vehicleModel);
-		vehicleModel.setId(vehicle.get().getId());
-		vehicleModel.setParkingSpot(parkingSpot.get());
-		vehicleRepository.save(vehicleModel);
+		
+		vehicle.get().setParkingSpot(parkingSpot.get());
+		vehicleRepository.save(vehicle.get());
 		
 		return ResponseEntity.ok().body(parkingSpot.get());
 		

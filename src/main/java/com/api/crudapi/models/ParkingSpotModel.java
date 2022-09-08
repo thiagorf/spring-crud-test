@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "TB_PARKING_SPOT")
@@ -23,6 +25,7 @@ public class ParkingSpotModel  implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "parkingSpot")
 	private Set<VehicleModel> vehicles = new HashSet<>();
 
