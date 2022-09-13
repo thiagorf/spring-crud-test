@@ -26,6 +26,7 @@ import com.api.crudapi.responses.ParkingSpotCarsResponse;
 import com.api.crudapi.services.ParkingSpotService;
 
 
+
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/parking-spot")
@@ -46,6 +47,7 @@ public class ParkingSpotController {
 	public ResponseEntity<Page<ParkingSpotModel>> getAllParkingSpots(@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
 		return this.parkingSpotService.findAllParkingSpots(pageable);	
 	}
+	
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ParkingSpotCarsResponse> getOneParkingSpot(@PathVariable(value = "id") UUID id) {

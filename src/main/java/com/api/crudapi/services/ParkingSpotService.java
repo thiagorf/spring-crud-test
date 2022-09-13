@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,10 +27,12 @@ public class ParkingSpotService {
 	
 	final ParkingSpotRepository parkingSpotRepository;
 	final VehicleRepository vehicleRepository;
+	final ModelMapper modelMapper;
 	
-	public ParkingSpotService(ParkingSpotRepository parkingSpotRepository, VehicleRepository vehicleRepository) {
+	public ParkingSpotService(ParkingSpotRepository parkingSpotRepository, VehicleRepository vehicleRepository, ModelMapper modelMapper) {
 		this.parkingSpotRepository = parkingSpotRepository;
 		this.vehicleRepository = vehicleRepository;
+		this.modelMapper = modelMapper;
 	}
 	
 	public ResponseEntity<Object> addParkingSpot(ParkingSpotDto parkingSpotDto) {
@@ -60,11 +63,17 @@ public class ParkingSpotService {
 		if(!parkingSpot.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		var parkingSpotCars = new ParkingSpotCarsResponse();
-		BeanUtils.copyProperties(parkingSpot, parkingSpotCars);
-		parkingSpotCars.setVehicles(parkingSpot.get().getVehicles());
+		// 1 way
+		// var parkingSpotResponse = new ParkingSpotCarsResponse(parkingSpot.get());
 		
-		return ResponseEntity.ok().body(parkingSpotCars);
+		// 2 way
+		//var parkingSpotResponse = new ParkingSpotCarsResponse();
+		//BeanUtils.copyProperties(parkingSpot.get(), parkingSpotResponse);
+		
+		//3 way
+		var parkingSpotResponse = modelMapper.map(parkingSpot.get(), ParkingSpotCarsResponse.class);
+		
+		return ResponseEntity.ok().body(parkingSpotResponse);
 	}
 	
 	@Transactional

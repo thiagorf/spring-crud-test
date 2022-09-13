@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 
@@ -26,7 +26,7 @@ public class ParkingSpotModel  implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 	
-	@JsonIgnore
+	@JsonManagedReference
 	@OneToMany(mappedBy = "parkingSpot" )
 	private Set<VehicleModel> vehicles = new HashSet<>();
 
