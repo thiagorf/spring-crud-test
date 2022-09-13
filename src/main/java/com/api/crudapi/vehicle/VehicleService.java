@@ -1,4 +1,4 @@
-package com.api.crudapi.services;
+package com.api.crudapi.vehicle;
 
 import java.net.URI;
 import java.util.List;
@@ -11,10 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.api.crudapi.dtos.VehicleDto;
-import com.api.crudapi.models.VehicleModel;
-import com.api.crudapi.repositories.VehicleRepository;
 
 @Service
 public class VehicleService {

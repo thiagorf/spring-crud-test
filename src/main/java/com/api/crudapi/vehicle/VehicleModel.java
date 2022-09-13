@@ -1,4 +1,4 @@
-package com.api.crudapi.models;
+package com.api.crudapi.vehicle;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.api.crudapi.parkingspot.ParkingSpotModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
