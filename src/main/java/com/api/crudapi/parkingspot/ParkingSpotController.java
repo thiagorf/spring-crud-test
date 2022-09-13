@@ -1,6 +1,7 @@
 package com.api.crudapi.parkingspot;
 
 
+import java.net.URI;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 
@@ -34,41 +36,58 @@ public class ParkingSpotController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
-		return this.parkingSpotService.addParkingSpot(parkingSpotDto);
+	public ResponseEntity<ParkingSpotModel> saveParkingSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
+		var parkingSpot = parkingSpotService.addParkingSpot(parkingSpotDto);
+		
+		URI location = ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(parkingSpot.getId())
+				.toUri();	
+		
+		return ResponseEntity.created(location).body(parkingSpot);
 	}
 	
 	@GetMapping
 	public ResponseEntity<Page<ParkingSpotModel>> getAllParkingSpots(@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
-		return this.parkingSpotService.findAllParkingSpots(pageable);	
+		var parkingSpot = parkingSpotService.findAllParkingSpots(pageable);
+		
+		return ResponseEntity.ok().body(parkingSpot);	
 	}
 	
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ParkingSpotCarsResponse> getOneParkingSpot(@PathVariable(value = "id") UUID id) {
-		return this.parkingSpotService.findOneParkingSpot(id);
+		var parkingSpot = parkingSpotService.findOneParkingSpot(id);
+		return ResponseEntity.ok().body(parkingSpot);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ParkingSpotModel> deleteParkingSpot(@PathVariable(value = "id") UUID id) {
-		return this.parkingSpotService.deleteParkingSpot(id);
+		parkingSpotService.deleteParkingSpot(id);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<ParkingSpotModel> updateParkingSpot(@PathVariable(value = "id") UUID id, @RequestBody @Valid ParkingSpotDto parkingSpotDto) {
-		return this.parkingSpotService.updateParkingSpot(id, parkingSpotDto);
+		var updatedParkingSpot = parkingSpotService.updateParkingSpot(id, parkingSpotDto);
+		
+		return ResponseEntity.ok().body(updatedParkingSpot);
 	}
 	
 	// attach parkingspot id to vehicle and show the relantionship created?
 	@PutMapping("/{parkingSpot_id}/vehicles/{vehicle_id}")
 	public ResponseEntity<ParkingSpotModel> parkVehicle(@PathVariable("parkingSpot_id") UUID parkingSpotId, @PathVariable("vehicle_id") UUID vehicleId) {
+		var parkingSpotVehicles = parkingSpotService.parkVehicle(parkingSpotId, vehicleId);
 		
-		return parkingSpotService.parkVehicle(parkingSpotId, vehicleId);
+		return ResponseEntity.ok().body(parkingSpotVehicles);
 	}
 	
 	@PutMapping("/{parkingSpot_id}/vehicles/{vehicle_id}/leave")
 	public ResponseEntity<Object> leaveParkingSpot(@PathVariable("parkingSpot_id") UUID parkingSpotId, @PathVariable("vehicle_id") UUID vehicleId) {
-		return parkingSpotService.leaveParkingSpot(parkingSpotId, vehicleId);
+		var parkingSpotVehicles = parkingSpotService.leaveParkingSpot(parkingSpotId, vehicleId);
+		
+		return ResponseEntity.ok().body(parkingSpotVehicles);
 	}
 	
 }

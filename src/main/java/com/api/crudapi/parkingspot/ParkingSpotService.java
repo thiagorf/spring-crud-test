@@ -1,20 +1,16 @@
 package com.api.crudapi.parkingspot;
 
-
-import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.api.crudapi.exceptions.BadRequestException;
+import com.api.crudapi.exceptions.NotFoundException;
 import com.api.crudapi.vehicle.VehicleModel;
 import com.api.crudapi.vehicle.VehicleRepository;
 
@@ -31,17 +27,11 @@ public class ParkingSpotService {
 		this.modelMapper = modelMapper;
 	}
 	
-	public ResponseEntity<Object> addParkingSpot(ParkingSpotDto parkingSpotDto) {
+	public ParkingSpotModel addParkingSpot(ParkingSpotDto parkingSpotDto) {
 		var parkingSpotModel = new ParkingSpotModel();
-		BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);
+		modelMapper.map(parkingSpotDto, parkingSpotModel);
 		
-		URI location = ServletUriComponentsBuilder
-				.fromCurrentRequest()
-				.path("/{id}")
-				.buildAndExpand(parkingSpotModel.getId())
-				.toUri();		
-		
-		return ResponseEntity.created(location).body(parkingSpotRepository.save(parkingSpotModel));
+		return parkingSpotRepository.save(parkingSpotModel);
 	}
 	
 	@Transactional
@@ -49,16 +39,12 @@ public class ParkingSpotService {
 		return parkingSpotRepository.save(parkingSpotModel);
 	}
 
-	public ResponseEntity<Page<ParkingSpotModel>> findAllParkingSpots(Pageable pageable) {
-		return ResponseEntity.ok().body(parkingSpotRepository.findAll(pageable));
+	public Page<ParkingSpotModel> findAllParkingSpots(Pageable pageable) {
+		return parkingSpotRepository.findAll(pageable);
 	}
 	
-	public ResponseEntity<ParkingSpotCarsResponse> findOneParkingSpot(UUID id) {
-		Optional<ParkingSpotModel> parkingSpot = parkingSpotRepository.findById(id);
-		
-		if(!parkingSpot.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
+	public ParkingSpotCarsResponse findOneParkingSpot(UUID id) {
+		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(id).orElseThrow(() -> new NotFoundException());
 		// 1 way
 		// var parkingSpotResponse = new ParkingSpotCarsResponse(parkingSpot.get());
 		
@@ -67,81 +53,49 @@ public class ParkingSpotService {
 		//BeanUtils.copyProperties(parkingSpot.get(), parkingSpotResponse);
 		
 		//3 way
-		var parkingSpotResponse = modelMapper.map(parkingSpot.get(), ParkingSpotCarsResponse.class);
+		var parkingSpotResponse = modelMapper.map(parkingSpot, ParkingSpotCarsResponse.class);
 		
-		return ResponseEntity.ok().body(parkingSpotResponse);
+		return parkingSpotResponse;
 	}
 	
 	@Transactional
-	public ResponseEntity<ParkingSpotModel> deleteParkingSpot(UUID id) {
-		Optional<ParkingSpotModel> parkingSpot = parkingSpotRepository.findById(id);
-		
-		if(!parkingSpot.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		parkingSpotRepository.delete(parkingSpot.get());
-		
-		return ResponseEntity.noContent().build();
+	public void deleteParkingSpot(UUID id) {
+		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(id).orElseThrow(() -> new NotFoundException());
+
+		parkingSpotRepository.delete(parkingSpot);
 	}
 	
-	public ResponseEntity<ParkingSpotModel> updateParkingSpot(UUID id, ParkingSpotDto parkingSpotDto) {
-		Optional<ParkingSpotModel> parkingSpot = parkingSpotRepository.findById(id);
+	public ParkingSpotModel updateParkingSpot(UUID id, ParkingSpotDto parkingSpotDto) {
+		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(id).orElseThrow(() -> new NotFoundException());
 		
-		if(!parkingSpot.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
+		modelMapper.map(parkingSpotDto, parkingSpot);
 		
-		var parkingSpotModel = new ParkingSpotModel();
-		BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);
-		parkingSpotModel.setId(parkingSpot.get().getId());
-		
-		return ResponseEntity.ok().body(parkingSpotRepository.save(parkingSpotModel));
+		return parkingSpotRepository.save(parkingSpot);
 	}
 	
-	public ResponseEntity<ParkingSpotModel> parkVehicle(UUID parkingSpotId, UUID vehicleId) {
-		Optional<ParkingSpotModel> parkingSpot = parkingSpotRepository.findById(parkingSpotId);
+	public ParkingSpotModel parkVehicle(UUID parkingSpotId, UUID vehicleId) {
+		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(parkingSpotId).orElseThrow(() -> new NotFoundException());
 		
-		if(!parkingSpot.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
+		VehicleModel vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new NotFoundException());
 		
-		Optional<VehicleModel> vehicle = vehicleRepository.findById(vehicleId);
+		vehicle.setParkingSpot(parkingSpot);
+		vehicleRepository.save(vehicle);
 		
-		if(!vehicle.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		
-		vehicle.get().setParkingSpot(parkingSpot.get());
-		vehicleRepository.save(vehicle.get());
-		
-		return ResponseEntity.ok().body(parkingSpot.get());
+		return parkingSpot;
 		
 	}
 	
-	public ResponseEntity<Object> leaveParkingSpot(UUID parkingSpotId, UUID vehicleId ) {
-		Optional<ParkingSpotModel> parkingSpot = parkingSpotRepository.findById(parkingSpotId);
+	public ParkingSpotModel leaveParkingSpot(UUID parkingSpotId, UUID vehicleId ) {
+		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(parkingSpotId).orElseThrow(() -> new NotFoundException());
+		VehicleModel vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new NotFoundException());
 		
-		if(!parkingSpot.isPresent()) {
-			return ResponseEntity.notFound().build();
+		if(!parkingSpot.getVehicles().contains(vehicle)) {
+			throw new BadRequestException("Invalid or inexisting vehicle");
 		}
 		
-		Optional<VehicleModel> vehicle = vehicleRepository.findById(vehicleId);
+		parkingSpot.removeVehicles(vehicle);
+		parkingSpotRepository.save(parkingSpot);
 		
-		if(!vehicle.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		var vehicleModel = vehicle.get();
-		var parkingSpotModel = parkingSpot.get();
-		
-		if(!parkingSpotModel.getVehicles().contains(vehicleModel)) {
-			return ResponseEntity.badRequest().body("Invalid or iniexisting vehicle!");
-		}
-		
-		parkingSpotModel.removeVehicles(vehicleModel);
-		parkingSpotRepository.save(parkingSpotModel);
-		
-		return ResponseEntity.ok().body(parkingSpotModel);
+		return parkingSpot;
 	}
 }
