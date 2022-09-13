@@ -1,5 +1,6 @@
 package com.api.crudapi.vehicle;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/vehicles")
@@ -27,26 +29,37 @@ public class VehicleController {
 	
 	@PostMapping
 	public ResponseEntity<VehicleModel> saveVehicle(@RequestBody @Valid VehicleDto vehicleDto) {
-		return vehicleService.save(vehicleDto);
+		var vehicle = vehicleService.save(vehicleDto);
+		
+		URI location = ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(vehicle.getId())
+				.toUri();
+		
+		return ResponseEntity.created(location).body(vehicle);
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<VehicleModel>> getAllVehicles() {
-		return vehicleService.getAllVehicles();
+		return ResponseEntity.ok().body(vehicleService.getAllVehicles());
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<VehicleModel> getOneVehicle(@PathVariable(value = "id") UUID id) {
-		return vehicleService.getOneVehicle(id);
+		return ResponseEntity.ok().body(vehicleService.getOneVehicle(id));
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<VehicleModel> updateVehicle(@RequestBody @Valid VehicleDto vehicleDto, @PathVariable(value = "id") UUID id) {
-		return vehicleService.updateVehicle(id, vehicleDto);
+		var updatedVehicle = vehicleService.updateVehicle(id, vehicleDto);
+		
+		return ResponseEntity.ok().body(updatedVehicle);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<VehicleModel> deleteVehicle(@PathVariable(value = "id") UUID id) {
-		return vehicleService.deleteVehicle(id);
+		vehicleService.deleteVehicle(id);
+		return ResponseEntity.noContent().build();
 	}
 }
