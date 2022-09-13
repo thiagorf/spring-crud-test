@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 @Table(name = "TB_VEHICLE")
@@ -25,7 +27,8 @@ public class VehicleModel implements Serializable{
 	
 	@Column(nullable = false, length = 100)
 	private String brand;
-	
+
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "parkingSpot_id", referencedColumnName = "id")
 	private ParkingSpotModel parkingSpot;
