@@ -1,10 +1,10 @@
-package com.api.crudapi.responses;
+package com.api.crudapi.parkingspot;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import com.api.crudapi.models.VehicleModel;
+import com.api.crudapi.vehicle.VehicleModel;
 
 
 

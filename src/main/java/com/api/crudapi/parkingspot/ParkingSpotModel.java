@@ -1,4 +1,4 @@
-package com.api.crudapi.models;
+package com.api.crudapi.parkingspot;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.api.crudapi.vehicle.VehicleModel;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 

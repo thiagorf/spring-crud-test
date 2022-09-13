@@ -1,4 +1,4 @@
-package com.api.crudapi.services;
+package com.api.crudapi.parkingspot;
 
 
 import java.net.URI;
@@ -15,12 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.api.crudapi.dtos.ParkingSpotDto;
-import com.api.crudapi.models.ParkingSpotModel;
-import com.api.crudapi.models.VehicleModel;
-import com.api.crudapi.repositories.ParkingSpotRepository;
-import com.api.crudapi.repositories.VehicleRepository;
-import com.api.crudapi.responses.ParkingSpotCarsResponse;
+import com.api.crudapi.vehicle.VehicleModel;
+import com.api.crudapi.vehicle.VehicleRepository;
 
 @Service
 public class ParkingSpotService {

@@ -1,4 +1,4 @@
-package com.api.crudapi.controllers;
+package com.api.crudapi.parkingspot;
 
 
 import java.util.UUID;
@@ -19,11 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.api.crudapi.dtos.ParkingSpotDto;
-import com.api.crudapi.models.ParkingSpotModel;
-import com.api.crudapi.responses.ParkingSpotCarsResponse;
-import com.api.crudapi.services.ParkingSpotService;
 
 
 

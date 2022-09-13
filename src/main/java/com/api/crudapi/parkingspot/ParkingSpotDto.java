@@ -1,4 +1,4 @@
-package com.api.crudapi.dtos;
+package com.api.crudapi.parkingspot;
 
 import javax.validation.constraints.NotBlank;
 
