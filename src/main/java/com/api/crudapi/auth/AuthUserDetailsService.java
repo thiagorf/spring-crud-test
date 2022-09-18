@@ -15,7 +15,7 @@ public class AuthUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		var newUser = new User("test", "test", new ArrayList<>());
-		System.out.println(newUser);
+		
 		return newUser;
 	}
 }
