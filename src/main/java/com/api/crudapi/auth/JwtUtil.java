@@ -15,13 +15,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class JwtUtil {
 
-	private String SECRET_UNSAFE_KEY = "secret";
+	private String SECRET_UNSAFE_KEY = "c2VjcmV0";
 	
-	public String extractUsername(String token) {
+	public String extractUsername(String token){
 		return extractClaim(token, Claims::getSubject);
 	}
 	
-	public Date extractExpiration(String token) {
+	public Date extractExpiration(String token){
 		return extractClaim(token, Claims::getExpiration);
 	}
 	
@@ -30,7 +30,7 @@ public class JwtUtil {
 		return claimsResolver.apply(claims);	
 	}
 	
-	private Claims extractAllClaims(String token) {
+	private Claims extractAllClaims(String token){
 		return Jwts.parser().setSigningKey(SECRET_UNSAFE_KEY).parseClaimsJws(token).getBody();
 	}
 	
@@ -44,7 +44,11 @@ public class JwtUtil {
 	}
 	
 	public String createToken(Map<String, Object> claims, String subject) {
-		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+		return Jwts.builder()
+				.setClaims(claims)
+				.setIssuer("Spring crud api")
+				.setSubject(subject)
+				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
 				.signWith(SignatureAlgorithm.HS256, SECRET_UNSAFE_KEY).compact();
 	}
