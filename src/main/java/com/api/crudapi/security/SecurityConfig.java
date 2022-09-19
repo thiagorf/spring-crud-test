@@ -37,16 +37,16 @@ public class SecurityConfig{
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf().disable()
-			.authorizeHttpRequests()
-			.antMatchers("/vehicles").authenticated()
-			.antMatchers("/parking-spot", "/login").permitAll()
-			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and()
-			.httpBasic(withDefaults());
+			.authorizeHttpRequests(auth -> {
+				auth.antMatchers("/vehicles").authenticated();
+				auth.antMatchers("/parking-spot", "/login").permitAll();
+			})
+			.sessionManagement(session -> {
+				session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			})
+			.httpBasic(withDefaults())
+			.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 		
-		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
 }
