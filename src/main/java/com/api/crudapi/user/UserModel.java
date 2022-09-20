@@ -9,8 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 public class UserModel implements Serializable {
 
@@ -20,11 +18,11 @@ public class UserModel implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	// TODO add name field
 	@Column(unique = true)
 	private String email;
 
 	@Column
-	@JsonIgnore
 	private String password;
 
 	public UUID getId() {

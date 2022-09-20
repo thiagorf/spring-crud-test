@@ -8,22 +8,20 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.api.crudapi.auth.JwtUtil;
 import com.api.crudapi.exceptions.BadRequestException;
 import com.api.crudapi.exceptions.NotFoundException;
+import com.api.crudapi.security.JwtProvider;
 import com.api.crudapi.user.payload.JwtResponse;
 import com.api.crudapi.user.payload.RegisterUserDto;
 import com.api.crudapi.user.payload.UserCredentialsDto;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
 	final UserRepository userRepository;
 	final ModelMapper modelMapper;
@@ -35,22 +33,22 @@ public class UserService implements UserDetailsService {
 	final AuthenticationManager authManager;
 
 	// Create a jwt token
-	final JwtUtil jwtUtil;
+	final JwtProvider jwtProvider;
 
-	public UserService(UserRepository userRepository, ModelMapper modelMapper, BCryptPasswordEncoder passwordEncoder,
-			AuthenticationManager authManager, JwtUtil jwtUtil) {
+	public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder,
+			AuthenticationManager authManager, JwtProvider jwtProvider) {
 		this.userRepository = userRepository;
 		this.modelMapper = modelMapper;
 		this.passwordEncoder = passwordEncoder;
 		this.authManager = authManager;
-		this.jwtUtil = jwtUtil;
+		this.jwtProvider = jwtProvider;
 	}
 
-	@Override
-	// The funny part is: username can be anything like a email or a Id
+	// The funny part is: username can be anything like email or Id
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		var userDetails = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException());
-
+		System.out.println(userDetails);
+		// userDetails = null;
 		// It's ok, i think
 		return (UserDetails) userDetails;
 	}
@@ -71,7 +69,6 @@ public class UserService implements UserDetailsService {
 	}
 
 	public JwtResponse attemptLogin(UserCredentialsDto userCredentials) throws Exception {
-		//
 		try {
 			authManager.authenticate(
 					new UsernamePasswordAuthenticationToken(userCredentials.getEmail(), userCredentials.getPassword()));
@@ -80,10 +77,12 @@ public class UserService implements UserDetailsService {
 			throw new Exception("Incorrect username or password", e);
 		}
 
-		final UserDetails user = loadUserByUsername(userCredentials.getEmail());
-		final String jwt = jwtUtil.generateToken(user);
+		// UserModel user =
+		// userRepository.findByEmail(userCredentials.getEmail()).orElseThrow(() -> new
+		// NotFoundException());
+		// String jwt = jwtProvider.sign(user);
 
-		return new JwtResponse(jwt);
+		return new JwtResponse("jwt");
 	}
 
 	public List<UserModel> getUsers() {

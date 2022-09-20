@@ -36,10 +36,12 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> {
 			auth.antMatchers("/vehicles").authenticated();
-			auth.antMatchers("/parking-spot", "/login").permitAll();
+			auth.antMatchers("/parking-spot").permitAll();
+			auth.antMatchers("/users", "/users/login").permitAll();
 		}).sessionManagement(session -> {
 			session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		}).httpBasic(withDefaults()).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
+
 }
