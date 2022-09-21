@@ -77,12 +77,11 @@ public class UserService {
 			throw new Exception("Incorrect username or password", e);
 		}
 
-		// UserModel user =
-		// userRepository.findByEmail(userCredentials.getEmail()).orElseThrow(() -> new
-		// NotFoundException());
-		// String jwt = jwtProvider.sign(user);
+		UserModel user = userRepository.findByEmail(userCredentials.getEmail())
+				.orElseThrow(() -> new NotFoundException());
+		String jwt = jwtProvider.sign(user);
 
-		return new JwtResponse("jwt");
+		return new JwtResponse(jwt);
 	}
 
 	public List<UserModel> getUsers() {

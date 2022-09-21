@@ -1,6 +1,7 @@
 package com.api.crudapi.security;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -10,19 +11,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.api.crudapi.exceptions.NotFoundException;
-import com.api.crudapi.user.UserModel;
-import com.api.crudapi.user.UserRepository;
+import com.api.crudapi.security.auth.AuthUserDetailsService;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private UserRepository userRepository;
+	private AuthUserDetailsService userDetailsService;
 
 	@Autowired
 	private JwtProvider jwtProvider;
@@ -42,13 +42,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		}
 
 		if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserModel userDetails = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException());
+			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
 			var isTokenValid = jwtProvider.verify(token);
 
 			if (!(isTokenValid instanceof Exception)) {
-				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-						userDetails.getEmail(), userDetails.getPassword());
+				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null,
+						new ArrayList<>());
 				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			}
