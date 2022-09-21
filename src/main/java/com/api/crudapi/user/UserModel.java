@@ -1,6 +1,8 @@
 package com.api.crudapi.user;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -8,6 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.api.crudapi.vehicle.VehicleModel;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class UserModel implements Serializable {
@@ -18,12 +24,29 @@ public class UserModel implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	// TODO add name field
+	@Column
+	private String name;
+
 	@Column(unique = true)
 	private String email;
 
 	@Column
 	private String password;
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "user")
+	private Set<VehicleModel> vehicles = new HashSet<>();
+
+	public Set<VehicleModel> getVehicles() {
+		return vehicles;
+	}
+
+	public void addVehicles(VehicleModel vehicles) {
+		this.vehicles.add(vehicles);
+		vehicles.setUser(this);
+	}
+
+	// TODO remove vehicles?
 
 	public UUID getId() {
 		return id;
@@ -49,6 +72,13 @@ public class UserModel implements Serializable {
 		this.password = password;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 	// TODO oneToMany relationship
 
 }

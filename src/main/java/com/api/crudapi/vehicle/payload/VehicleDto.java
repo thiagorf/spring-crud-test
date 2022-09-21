@@ -1,4 +1,4 @@
-package com.api.crudapi.vehicle;
+package com.api.crudapi.vehicle.payload;
 
 import javax.validation.constraints.NotBlank;
 
