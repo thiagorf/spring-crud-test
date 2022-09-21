@@ -7,6 +7,6 @@ Just to test spring boot core functionalities (beans, annotations, micro service
 
 - [x] CRUD resources
 - [x] Authentication/authorization with jwt
-- [] Tests
-- [] Swagger docs
-- [] Mini microservices
+- [ ] Tests
+- [ ] Swagger docs
+- [ ] Mini microservices
