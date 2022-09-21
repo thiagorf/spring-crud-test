@@ -1,4 +1,4 @@
-package com.api.crudapi.parkingspot;
+package com.api.crudapi.parkingspot.payload;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,18 +6,14 @@ import java.util.UUID;
 
 import com.api.crudapi.vehicle.VehicleModel;
 
-
-
 public class ParkingSpotCarsResponse {
-	
+
 	private UUID id;
 	private int spotsQuantity;
 	private String parkingSpotNumber;
 	private String apartment;
 	private String block;
 	private Set<VehicleModel> vehicles = new HashSet<>();
-
-	
 
 	public UUID getId() {
 		return id;
@@ -66,6 +62,5 @@ public class ParkingSpotCarsResponse {
 	public void setParkingSpotNumber(String parkingSpotNumber) {
 		this.parkingSpotNumber = parkingSpotNumber;
 	}
-	
 
 }
