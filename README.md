@@ -24,7 +24,7 @@ coming soon...
 - [ ] Tests
 - [x] Swagger docs (Meta programming is really convenient)
 - [ ] Mini microservices
-- [ ] Docker container with database configuration
+- [x] Docker container with database configuration
 
 ## Api Documentation
 1. Run spring boot
