@@ -13,6 +13,7 @@ Just to test spring boot core functionalities (beans, annotations, micro service
 - [ ] Tests
 - [x] Swagger docs (Meta programming is really convenient)
 - [ ] Mini microservices
+- [ ] Docker container
 
 ## Api Documentation
 1. Run spring boot
