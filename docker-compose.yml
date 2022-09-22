@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+	database:
+		image: postgres
+		restart: always
+		ports:
+			- 5433:5432
+		enviroment:
+			- POSTGRES_USER=postgres
+			- POSTGRES_PASSWORD=anything
+			- POSTGRES_DB=javadb
+		volumes:
+			- pgdata:/var/lib/postgres/data
+	spring:
+		build: .
+		ports:
+			- 8080:8080
+		depends_on:
+			- database
+				
