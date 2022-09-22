@@ -3,6 +3,17 @@
 
 Just to test spring boot core functionalities (beans, annotations, micro services, tests)
 
+## How to run?
+
+> Requirements: jdk-11
+
+* Rename the file "application-dev.properties" to "application.properties" in src/main/resource and give the respective required configuration (database name, port number, etc). 
+* Run the start command (intellij or eclipse)
+
+> With docker
+
+coming soon...
+
 ## Implementations
 
 - [x] CRUD resources
@@ -13,7 +24,7 @@ Just to test spring boot core functionalities (beans, annotations, micro service
 - [ ] Tests
 - [x] Swagger docs (Meta programming is really convenient)
 - [ ] Mini microservices
-- [ ] Docker container
+- [ ] Docker container with database configuration
 
 ## Api Documentation
 1. Run spring boot
