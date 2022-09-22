@@ -11,5 +11,5 @@ Just to test spring boot core functionalities (beans, annotations, micro service
 - [ ] Lombok annotations
 - [ ] Advanced jpa relationships
 - [ ] Tests
-- [ ] Swagger docs
+- [x] Swagger docs (Meta programming is really convenient)
 - [ ] Mini microservices
