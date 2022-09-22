@@ -15,5 +15,6 @@ Just to test spring boot core functionalities (beans, annotations, micro service
 - [ ] Mini microservices
 
 ## Api Documentation
-1 Run spring boot
-2 check swagger-ui.html (http://localhost:8080/swagger-ui.html)
+1. Run spring boot
+    * intellij or eclipse start command
+2. check swagger-ui.html (http://localhost:8080/swagger-ui.html)
