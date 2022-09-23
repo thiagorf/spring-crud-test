@@ -18,7 +18,7 @@ coming soon...
 
 - [x] CRUD resources
 - [x] Authentication/authorization with jwt (Custom UserDetails, UserDetailsService, Basic jwt filter)
-- [ ] Cookie token instead of Bearer header
+- [x] Cookie token instead of Bearer header
 - [ ] Lombok annotations
 - [ ] Advanced jpa relationships
 - [ ] Tests
