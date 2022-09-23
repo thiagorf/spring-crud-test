@@ -54,7 +54,7 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> {
 			auth.antMatchers("/parking-spot").permitAll();
-			auth.antMatchers("/users").permitAll();
+			auth.antMatchers("/users", "/users/login").permitAll();
 			auth.antMatchers("/vehicles").authenticated();
 
 		}).sessionManagement(session -> {

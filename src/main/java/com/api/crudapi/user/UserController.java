@@ -3,6 +3,8 @@ package com.api.crudapi.user;
 import java.net.URI;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.api.crudapi.user.payload.JwtResponse;
+import com.api.crudapi.user.payload.LogoutResponse;
 import com.api.crudapi.user.payload.RegisterUserDto;
 import com.api.crudapi.user.payload.UserCredentialsDto;
 
@@ -38,10 +41,19 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<JwtResponse> login(@RequestBody @Valid UserCredentialsDto userCredentials) throws Exception {
-		JwtResponse jwt = userService.attemptLogin(userCredentials);
+	public ResponseEntity<JwtResponse> login(@RequestBody @Valid UserCredentialsDto userCredentials,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JwtResponse jwt = userService.attemptLogin(userCredentials, request, response);
 
 		return ResponseEntity.ok().body(jwt);
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<LogoutResponse> logout(HttpServletRequest request, HttpServletResponse response) {
+		// TODO cookie not found error
+		LogoutResponse message = userService.logout(request, response);
+
+		return ResponseEntity.ok().body(message);
 	}
 
 	@GetMapping
