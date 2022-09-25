@@ -1,29 +1,32 @@
 version: "3"
 
 services:
-	database:
-		image: postgres
-		restart: always
-		ports:
-			- 5433:5432
-		environment:
-			- POSTGRES_USER=postgres
-			- POSTGRES_PASSWORD=anything
-			- POSTGRES_DB=javadb
-		volumes:
-			- pgdata:/var/lib/postgres/data
-	spring:
-		build: .
-		ports:
-			- 8080:8080
-		depends_on:
-			- database
-		environment:
-			- SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/javadb
-			- SPRING_DATASOURCE_USERNAME=postgres
-			- SPRING_DATASOURCE_PASSWORD=anything
-			- SPRING_JPA_HIBERNATE_DDL_AUTO=update
-			
+   database:
+        image: postgres
+        restart: always
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1234
+            - POSTGRES_DB=javadb
+        volumes:
+            - pgdata:/var/lib/postgres/data
+   spring:
+        build: .
+        restart: on-failure
+        ports:
+            - 8080:8080
+        environment:
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/javadb
+            - SPRING_DATASOURCE_USERNAME=postgres
+            - SPRING_DATASOURCE_PASSWORD=1234
+        depends_on:
+            - database
+       
+
 volumes:
-	pgdata:
-	
+    pgdata:
+        
+
+
