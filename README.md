@@ -12,7 +12,9 @@ Just to test spring boot core functionalities (beans, annotations, micro service
 
 > With docker
 
-coming soon...
+* Run docker compose up --build (docker-compose in older versions) to create the container for the first time (Dockerfile image)
+* Ctrl + c to kill the running container
+* to run the container again, docker compose up
 
 ## Implementations
 
