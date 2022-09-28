@@ -37,6 +37,18 @@ public class UserModel implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private Set<VehicleModel> vehicles = new HashSet<>();
 
+	public UserModel() {
+	}
+
+	public UserModel(UUID id, String name, String email, String password, Set<VehicleModel> vehicles) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.vehicles = vehicles;
+	}
+
 	public Set<VehicleModel> getVehicles() {
 		return vehicles;
 	}
