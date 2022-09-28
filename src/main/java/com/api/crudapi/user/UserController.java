@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.api.crudapi.user.payload.JwtResponse;
 import com.api.crudapi.user.payload.LogoutResponse;
@@ -31,11 +31,11 @@ public class UserController {
 	}
 
 	@PostMapping
-	public ResponseEntity<UserModel> createUser(@RequestBody @Valid RegisterUserDto registerUserDto) {
+	public ResponseEntity<UserModel> createUser(@RequestBody @Valid RegisterUserDto registerUserDto,
+			UriComponentsBuilder uriComponent) {
 		UserModel createdUser = userService.registerUser(registerUserDto);
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(createdUser.getId()).toUri();
+		URI location = uriComponent.path("/users/{id}").build(createdUser.getId());
 
 		return ResponseEntity.created(location).body(createdUser);
 	}
