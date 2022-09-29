@@ -1,5 +1,6 @@
 package com.api.crudapi.user;
 
+import static com.api.crudapi.util.JsonUtil.asJsonString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -50,9 +51,11 @@ public class UserControllerTest {
 		when(userService.registerUser(any(RegisterUserDto.class)))
 				.thenReturn(new UserModel(UUID.randomUUID(), "test", "test@gmail.com", "test1234", new HashSet<>()));
 
+		// "{\"name\": \"test\", \"email\": \"test@gmail.com\", \"password\":
+		// \"test1234\"}"
 		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.characterEncoding("utf-8")
-				.content("{\"name\": \"test\", \"email\": \"test@gmail.com\", \"password\": \"test1234\"}")
+				.content(asJsonString(new RegisterUserDto("test", "test@gmail.com", "test1234")))
 				.accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isCreated());
 	}
 
@@ -67,7 +70,7 @@ public class UserControllerTest {
 		when(userService.attemptLogin(any(UserCredentialsDto.class))).thenReturn(new JwtResponse("jwt"));
 
 		mockMvc.perform(post("/users/login").contentType(MediaType.APPLICATION_JSON)
-				.content("{\"email\": \"test@gmail.com\", \"password\": \"test1234\"}")
+				.content(asJsonString(new UserCredentialsDto("test@gmail.com", "test1234")))
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.jwt").value("jwt")).andExpect(cookie().exists(cookieName))
 				.andExpect(cookie().value(cookieName, "jwt"));
