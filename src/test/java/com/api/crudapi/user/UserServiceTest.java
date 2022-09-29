@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,20 +46,22 @@ public class UserServiceTest {
 	@InjectMocks
 	private UserService userService;
 
+	private UserModel user;
+	private RegisterUserDto userInfo;
+
+	@BeforeEach
+	void setupTest() {
+		user = new UserModel(UUID.randomUUID(), "test", "test@gmail.com", "test1234", new HashSet<>());
+		userInfo = new RegisterUserDto(user.getName(), user.getEmail(), user.getPassword());
+	}
+
 	@Test
 	@DisplayName("Should be able to register an user")
 	void registerUser() {
-		UserModel user = new UserModel(UUID.randomUUID(), "test", "test@gmail.com", "test1234", new HashSet<>());
-
-		RegisterUserDto credentials = new RegisterUserDto();
-		credentials.setEmail("test@gmail.com");
-		credentials.setName("test");
-		credentials.setPassword("test1234");
-
-		when(userRepository.findByEmail(credentials.getEmail())).thenReturn(Optional.empty());
+		when(userRepository.findByEmail(userInfo.getEmail())).thenReturn(Optional.empty());
 		when(userRepository.save(any(UserModel.class))).thenReturn(user);
 
-		var sut = userService.registerUser(credentials);
+		var sut = userService.registerUser(userInfo);
 
 		assertThat(sut).hasNoNullFieldsOrPropertiesExcept("vehicles");
 	}
@@ -66,14 +69,9 @@ public class UserServiceTest {
 	@Test
 	@DisplayName("Should not be able to register an user with duplicated email")
 	void registerUserBadRequestException() {
-		UserModel user = new UserModel(UUID.randomUUID(), "test", "test@gmail.com", "test1234", new HashSet<>());
-		RegisterUserDto credentials = new RegisterUserDto();
-		credentials.setEmail("test@gmail.com");
-		credentials.setName("test");
-		credentials.setPassword("test1234");
-		when(userRepository.findByEmail(credentials.getEmail())).thenReturn(Optional.of(user));
+		when(userRepository.findByEmail(userInfo.getEmail())).thenReturn(Optional.of(user));
 
-		assertThrows(BadRequestException.class, () -> userService.registerUser(credentials));
+		assertThrows(BadRequestException.class, () -> userService.registerUser(userInfo));
 	}
 
 	@Test
@@ -89,7 +87,6 @@ public class UserServiceTest {
 	@Test
 	@DisplayName("Should be able to authenticate a user")
 	void attemptLoggin() throws Exception {
-		UserModel user = new UserModel(UUID.randomUUID(), "test", "test@gmail.com", "test1234", new HashSet<>());
 		UserCredentialsDto credentials = new UserCredentialsDto();
 		credentials.setEmail("test@gmail.com");
 		credentials.setPassword("test1234");

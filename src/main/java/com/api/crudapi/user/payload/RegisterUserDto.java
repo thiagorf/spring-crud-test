@@ -13,6 +13,16 @@ public class RegisterUserDto {
 	@NotBlank
 	private String password;
 
+	public RegisterUserDto() {
+	}
+
+	public RegisterUserDto(@NotBlank String name, @NotBlank String email, @NotBlank String password) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.password = password;
+	}
+
 	public String getName() {
 		return name;
 	}
