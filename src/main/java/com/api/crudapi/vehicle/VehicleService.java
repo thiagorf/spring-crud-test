@@ -30,7 +30,7 @@ public class VehicleService {
 
 	@Transactional
 	public VehicleModel save(VehicleDto vehicleDto, String email) {
-		UserModel user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException());
+		UserModel user = userRepository.findByEmail(email).orElseThrow(NotFoundException::new);
 
 		var vehicleModel = new VehicleModel();
 
@@ -49,13 +49,13 @@ public class VehicleService {
 	}
 
 	public VehicleModel getOneVehicle(UUID id) {
-		VehicleModel vehicleModel = vehicleRepository.findById(id).orElseThrow(() -> new NotFoundException());
+		VehicleModel vehicleModel = vehicleRepository.findById(id).orElseThrow(NotFoundException::new);
 
 		return vehicleModel;
 	}
 
 	public VehicleModel updateVehicle(UUID id, VehicleDto vehicleDto) {
-		VehicleModel vehicleModel = vehicleRepository.findById(id).orElseThrow(() -> new NotFoundException());
+		VehicleModel vehicleModel = vehicleRepository.findById(id).orElseThrow(NotFoundException::new);
 
 		modelMapper.map(vehicleDto, vehicleModel);
 
@@ -65,7 +65,7 @@ public class VehicleService {
 
 	@Transactional
 	public void deleteVehicle(UUID id) {
-		VehicleModel vehicleModel = vehicleRepository.findById(id).orElseThrow(() -> new NotFoundException());
+		VehicleModel vehicleModel = vehicleRepository.findById(id).orElseThrow(NotFoundException::new);
 
 		vehicleRepository.delete(vehicleModel);
 	}

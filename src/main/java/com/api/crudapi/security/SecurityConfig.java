@@ -2,7 +2,6 @@ package com.api.crudapi.security;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,8 +22,7 @@ import com.api.crudapi.security.auth.AuthUserDetailsService;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Autowired
-	private JwtTokenFilter jwtTokenFilter;
+	// @Autowired private JwtTokenFilter jwtTokenFilter;
 
 	@Bean
 	public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authConfig) throws Exception {
@@ -38,6 +36,11 @@ public class SecurityConfig {
 		authProvider.setUserDetailsService(userDetailsService());
 
 		return authProvider;
+	}
+
+	@Bean
+	public JwtTokenFilter jwtTokenFilter() {
+		return new JwtTokenFilter();
 	}
 
 	@Bean
@@ -59,7 +62,7 @@ public class SecurityConfig {
 
 		}).sessionManagement(session -> {
 			session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		}).httpBasic(withDefaults()).addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+		}).httpBasic(withDefaults()).addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
 
