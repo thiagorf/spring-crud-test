@@ -39,6 +39,16 @@ public class VehicleModel implements Serializable {
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private UserModel user;
 
+	public VehicleModel() {
+	}
+
+	public VehicleModel(UUID id, String brand, ParkingSpotModel parkingSpot, UserModel user) {
+		this.id = id;
+		this.brand = brand;
+		this.parkingSpot = parkingSpot;
+		this.user = user;
+	}
+
 	public UserModel getUser() {
 		return user;
 	}

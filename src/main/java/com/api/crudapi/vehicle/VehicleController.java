@@ -33,6 +33,7 @@ public class VehicleController {
 
 	@PostMapping
 	public ResponseEntity<VehicleModel> saveVehicle(@RequestBody @Valid VehicleDto vehicleDto, Authentication auth) {
+
 		String email = auth.getName();
 
 		var vehicle = vehicleService.save(vehicleDto, email);
@@ -44,7 +45,7 @@ public class VehicleController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<VehicleResponse>> getAllVehicles() {
+	public ResponseEntity<List<VehicleResponse>> getAllVehicles(Authentication auth) {
 		return ResponseEntity.ok().body(vehicleService.getAllVehicles());
 	}
 
@@ -56,6 +57,7 @@ public class VehicleController {
 	@PutMapping("/{id}")
 	public ResponseEntity<VehicleModel> updateVehicle(@RequestBody @Valid VehicleDto vehicleDto,
 			@PathVariable(value = "id") UUID id) {
+
 		var updatedVehicle = vehicleService.updateVehicle(id, vehicleDto);
 
 		return ResponseEntity.ok().body(updatedVehicle);
