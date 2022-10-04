@@ -1,6 +1,7 @@
 package com.api.crudapi.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -17,6 +18,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +28,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.api.crudapi.exceptions.NotFoundException;
 import com.api.crudapi.security.auth.AuthUserDetails;
 import com.api.crudapi.security.auth.AuthUserDetailsService;
 import com.api.crudapi.security.auth.RequestCookie;
@@ -54,6 +57,11 @@ public class JwtTokenFilterTest {
 	@Mock
 	private FilterChain filterChain;
 
+	@AfterEach
+	void cleanContext() {
+		SecurityContextHolder.clearContext();
+	}
+
 	@Test
 	void doFilterInternal() throws ServletException, IOException {
 
@@ -79,5 +87,18 @@ public class JwtTokenFilterTest {
 
 		assertThat(authenticationContext.getAuthentication()).isNotNull();
 		assertThat(authenticationContext.getAuthentication().isAuthenticated()).isTrue();
+	}
+
+	@Test
+	void doFilterChainUserNotFoundException() throws ServletException, IOException {
+		ReflectionTestUtils.setField(jwtTokenFilter, "cookieName", cookieName);
+
+		Cookie cookie = new Cookie(cookieName, "jwt");
+
+		doReturn(cookie).when(requestCookie).getCookies(any(HttpServletRequest.class), eq(cookieName));
+		when(jwtProvider.extractEmail(anyString())).thenReturn("test@gmail.com");
+		when(userDetailsService.loadUserByUsername(anyString())).thenThrow(NotFoundException.class);
+
+		assertThrows(NotFoundException.class, () -> jwtTokenFilter.doFilterInternal(request, response, filterChain));
 	}
 }
