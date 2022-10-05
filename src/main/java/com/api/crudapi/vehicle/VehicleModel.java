@@ -16,7 +16,18 @@ import com.api.crudapi.parkingspot.ParkingSpotModel;
 import com.api.crudapi.user.UserModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "TB_VEHICLE")
 public class VehicleModel implements Serializable {
 
@@ -38,47 +49,5 @@ public class VehicleModel implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private UserModel user;
-
-	public VehicleModel() {
-	}
-
-	public VehicleModel(UUID id, String brand, ParkingSpotModel parkingSpot, UserModel user) {
-		this.id = id;
-		this.brand = brand;
-		this.parkingSpot = parkingSpot;
-		this.user = user;
-	}
-
-	public UserModel getUser() {
-		return user;
-	}
-
-	public void setUser(UserModel user) {
-		this.user = user;
-	}
-
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(UUID id) {
-		this.id = id;
-	}
-
-	public String getBrand() {
-		return brand;
-	}
-
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
-
-	public ParkingSpotModel getParkingSpot() {
-		return parkingSpot;
-	}
-
-	public void setParkingSpot(ParkingSpotModel parkingSpot) {
-		this.parkingSpot = parkingSpot;
-	}
 
 }

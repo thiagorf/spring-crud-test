@@ -16,29 +16,21 @@ import com.api.crudapi.parkingspot.payload.ParkingSpotResponse;
 import com.api.crudapi.vehicle.VehicleModel;
 import com.api.crudapi.vehicle.VehicleRepository;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class ParkingSpotService {
 
-	final ParkingSpotRepository parkingSpotRepository;
-	final VehicleRepository vehicleRepository;
-	final ModelMapper modelMapper;
+	private ParkingSpotRepository parkingSpotRepository;
+	private VehicleRepository vehicleRepository;
+	private ModelMapper modelMapper;
 
-	public ParkingSpotService(ParkingSpotRepository parkingSpotRepository, VehicleRepository vehicleRepository,
-			ModelMapper modelMapper) {
-		this.parkingSpotRepository = parkingSpotRepository;
-		this.vehicleRepository = vehicleRepository;
-		this.modelMapper = modelMapper;
-	}
-
+	@Transactional
 	public ParkingSpotModel addParkingSpot(ParkingSpotDto parkingSpotDto) {
 		var parkingSpotModel = new ParkingSpotModel();
 		modelMapper.map(parkingSpotDto, parkingSpotModel);
 
-		return parkingSpotRepository.save(parkingSpotModel);
-	}
-
-	@Transactional
-	public ParkingSpotModel save(ParkingSpotModel parkingSpotModel) {
 		return parkingSpotRepository.save(parkingSpotModel);
 	}
 
@@ -48,7 +40,7 @@ public class ParkingSpotService {
 	}
 
 	public ParkingSpotCarsResponse findOneParkingSpot(UUID id) {
-		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(id).orElseThrow(() -> new NotFoundException());
+		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(id).orElseThrow(NotFoundException::new);
 		// 1 way
 		// var parkingSpotResponse = new ParkingSpotCarsResponse(parkingSpot.get());
 
@@ -64,13 +56,13 @@ public class ParkingSpotService {
 
 	@Transactional
 	public void deleteParkingSpot(UUID id) {
-		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(id).orElseThrow(() -> new NotFoundException());
+		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(id).orElseThrow(NotFoundException::new);
 
 		parkingSpotRepository.delete(parkingSpot);
 	}
 
 	public ParkingSpotModel updateParkingSpot(UUID id, ParkingSpotDto parkingSpotDto) {
-		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(id).orElseThrow(() -> new NotFoundException());
+		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(id).orElseThrow(NotFoundException::new);
 
 		modelMapper.map(parkingSpotDto, parkingSpot);
 
@@ -79,9 +71,9 @@ public class ParkingSpotService {
 
 	public ParkingSpotModel parkVehicle(UUID parkingSpotId, UUID vehicleId) {
 		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(parkingSpotId)
-				.orElseThrow(() -> new NotFoundException());
+				.orElseThrow(NotFoundException::new);
 
-		VehicleModel vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new NotFoundException());
+		VehicleModel vehicle = vehicleRepository.findById(vehicleId).orElseThrow(NotFoundException::new);
 
 		vehicle.setParkingSpot(parkingSpot);
 		vehicleRepository.save(vehicle);
@@ -92,8 +84,8 @@ public class ParkingSpotService {
 
 	public ParkingSpotModel leaveParkingSpot(UUID parkingSpotId, UUID vehicleId) {
 		ParkingSpotModel parkingSpot = parkingSpotRepository.findById(parkingSpotId)
-				.orElseThrow(() -> new NotFoundException());
-		VehicleModel vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new NotFoundException());
+				.orElseThrow(NotFoundException::new);
+		VehicleModel vehicle = vehicleRepository.findById(vehicleId).orElseThrow(NotFoundException::new);
 
 		if (!parkingSpot.getVehicles().contains(vehicle)) {
 			throw new BadRequestException("Invalid or inexisting vehicle");

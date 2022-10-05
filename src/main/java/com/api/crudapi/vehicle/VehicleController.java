@@ -25,7 +25,7 @@ import com.api.crudapi.vehicle.payload.VehicleResponse;
 @RequestMapping("/vehicles")
 public class VehicleController {
 
-	final VehicleService vehicleService;
+	private VehicleService vehicleService;
 
 	public VehicleController(VehicleService vehicleService) {
 		this.vehicleService = vehicleService;

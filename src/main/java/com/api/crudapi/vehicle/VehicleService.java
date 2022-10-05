@@ -15,18 +15,15 @@ import com.api.crudapi.user.UserRepository;
 import com.api.crudapi.vehicle.payload.VehicleDto;
 import com.api.crudapi.vehicle.payload.VehicleResponse;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class VehicleService {
 
-	final private VehicleRepository vehicleRepository;
-	final private UserRepository userRepository;
-	final private ModelMapper modelMapper;
-
-	public VehicleService(VehicleRepository vehicleRepository, ModelMapper modelMapper, UserRepository userRepository) {
-		this.vehicleRepository = vehicleRepository;
-		this.modelMapper = modelMapper;
-		this.userRepository = userRepository;
-	}
+	private VehicleRepository vehicleRepository;
+	private UserRepository userRepository;
+	private ModelMapper modelMapper;
 
 	@Transactional
 	public VehicleModel save(VehicleDto vehicleDto, String email) {
