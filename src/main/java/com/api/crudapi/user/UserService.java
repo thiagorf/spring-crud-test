@@ -18,29 +18,23 @@ import com.api.crudapi.user.payload.JwtResponse;
 import com.api.crudapi.user.payload.RegisterUserDto;
 import com.api.crudapi.user.payload.UserCredentialsDto;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class UserService {
 
-	final UserRepository userRepository;
-	final ModelMapper modelMapper;
+	private UserRepository userRepository;
+	private ModelMapper modelMapper;
 
 	// Spring password encoder
-	final PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 
 	// Spring default authentication manager
-	final AuthenticationManager authManager;
+	private AuthenticationManager authManager;
 
 	// Create a jwt token
-	final JwtProvider jwtProvider;
-
-	public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder,
-			AuthenticationManager authManager, JwtProvider jwtProvider) {
-		this.userRepository = userRepository;
-		this.modelMapper = modelMapper;
-		this.passwordEncoder = passwordEncoder;
-		this.authManager = authManager;
-		this.jwtProvider = jwtProvider;
-	}
+	private JwtProvider jwtProvider;
 
 	@Transactional
 	public UserModel registerUser(RegisterUserDto registerUserDto) {

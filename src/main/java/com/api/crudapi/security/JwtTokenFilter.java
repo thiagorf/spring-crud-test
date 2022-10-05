@@ -17,9 +17,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.WebUtils;
 
 import com.api.crudapi.security.auth.AuthUserDetailsService;
+import com.api.crudapi.security.auth.RequestCookie;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -33,12 +33,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	@Autowired
 	private JwtProvider jwtProvider;
 
+	@Autowired
+	private RequestCookie requestCookie;
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 
-		Cookie cookie = WebUtils.getCookie(request, cookieName);
+		// Cookie cookie = WebUtils.getCookie(request, cookieName);
+
+		Cookie cookie = requestCookie.getCookies(request, cookieName);
 
 		String token = null;
 		String email = null;
@@ -51,6 +55,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
+			// Todo extractEmail already verify the token
 			var isTokenValid = jwtProvider.verify(token);
 
 			if (!(isTokenValid instanceof Exception)) {

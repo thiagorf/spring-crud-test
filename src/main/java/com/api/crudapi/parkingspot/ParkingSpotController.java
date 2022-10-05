@@ -24,16 +24,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.api.crudapi.parkingspot.payload.ParkingSpotCarsResponse;
 import com.api.crudapi.parkingspot.payload.ParkingSpotResponse;
 
+import lombok.AllArgsConstructor;
+
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/parking-spot")
+@AllArgsConstructor
 public class ParkingSpotController {
 
-	final ParkingSpotService parkingSpotService;
-
-	public ParkingSpotController(ParkingSpotService parkingSpotService) {
-		this.parkingSpotService = parkingSpotService;
-	}
+	private ParkingSpotService parkingSpotService;
 
 	@PostMapping
 	public ResponseEntity<ParkingSpotModel> saveParkingSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
