@@ -11,7 +11,7 @@ Custom [UserDetails](https://github.com/thiagorf/spring-crud-test/blob/master/sr
 
 Docker compose for [containerized development](https://github.com/thiagorf/spring-crud-test/blob/master/docker-compose.yml) and [Multistage build Dockerfile](https://github.com/thiagorf/spring-crud-test/blob/master/Dockerfile) 
 
-[Security Filter Unit test](https://github.com/thiagorf/spring-crud-test/blob/master/src/test/java/com/api/crudapi/security/JwtTokenFilterTest.java) using th ThreadLocal to check SecurityContextHolder
+[Security Filter Unit test](https://github.com/thiagorf/spring-crud-test/blob/master/src/test/java/com/api/crudapi/security/JwtTokenFilterTest.java) using the ThreadLocal to check SecurityContextHolder
 
 [Integration Test on Protected endpoint](https://github.com/thiagorf/spring-crud-test/blob/master/src/test/java/com/api/crudapi/vehicle/VehicleControllerTest.java) the FilterChainProxy is mocked, everything you define on ContextConfiguration will have to be mocked (VehicleController and SecurityConfig dependencies) 
 
