@@ -23,7 +23,7 @@ Docker compose for [containerized development](https://github.com/thiagorf/sprin
 
 > Requirements: jdk-11
 
-* Rename the file "application-dev.properties" to "application.properties" in src/main/resource and give the respective required configuration (database name, port number, etc). 
+* Rename the file "application-dev.properties" to "application.properties" in src/main/resource and give the respective required configuration (database name, port number, cookie name, secret, etc). 
 * Run the start command (intellij or eclipse)
 
 > With docker
